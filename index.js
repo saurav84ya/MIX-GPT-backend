@@ -25,9 +25,11 @@ app.get("/" , (req,res) => {
 
 const recpovery = require("./routes/recoveryPass")
 const auth = require("./routes/auth-routes")
+const ai = require("./routes/prompt-router")
 
 app.use("/rec" ,recpovery )
 app.use("/auth" ,auth )
+app.use("/ai" , ai)
 
 
 dbConnect()
@@ -35,7 +37,7 @@ dbConnect()
         app.listen(PORT , ()=> {
             console.log(`server is running at ${PORT}`)
         })        
-    })
+})
 
 
 
