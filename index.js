@@ -3,6 +3,7 @@ require("dotenv").config()
 const express = require("express")
 const dbConnect = require("./database/db")
 const cookieParser = require("cookie-parser");
+const cors = require("cors")
 const app = express()
 
 
@@ -14,6 +15,14 @@ const PORT = process.env.PORT || 4000
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+
+app.use(
+    cors({
+      origin: ["http://localhost:5173", "https://expansetracker9097.netlify.app" ],
+      credentials: true,
+    })
+  );
 
 
 

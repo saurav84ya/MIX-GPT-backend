@@ -79,7 +79,7 @@ const sentOtp = async (req, res) => {
 
 const sentOtpReg = async (req, res) => {
     const {email}  = req.params;
-
+    console.log("email" ,email)
     if (!email) {
         return res.json({
             success: false,

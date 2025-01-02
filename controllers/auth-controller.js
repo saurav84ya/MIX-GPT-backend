@@ -9,11 +9,11 @@ const jwt = require("jsonwebtoken")
 const reg = async (req, res) => {
     const { name, email, password, otp } = req.body;
 
-    // console.log("name, email, password, otp:", name, email, password, otp);
+    // console.log("name, email, password, otp: in reg ", name, email, password, otp);
 
     // Check for missing fields
     if (!name || !email || !password || !otp) {
-        return res.status(400).json({
+        return res.json({
             success: false,
             message: "Please fill all the fields",
         });
@@ -23,7 +23,7 @@ const reg = async (req, res) => {
         // Check if email already exists
         const isExist = await user.findOne({ email });
         if (isExist) {
-            return res.status(409).json({
+            return res.json({
                 success: false,
                 message: "Email already exists",
             });
@@ -32,7 +32,7 @@ const reg = async (req, res) => {
         // Get OTP from storage and validate
         const storedOtp = await getOtp(email);
         if (!storedOtp || storedOtp.otp !== otp) {
-            return res.status(400).json({
+            return res.json({
                 success: false,
                 message: "Invalid or expired OTP",
             });
@@ -83,8 +83,8 @@ const reg = async (req, res) => {
                 },
             });
     } catch (error) {
-        console.error("Error in registration:", error);
-        return res.status(500).json({
+        // console.error("Error in registration:", error);
+        return res.json({
             success: false,
             message: "Internal server error",
         });
@@ -96,6 +96,8 @@ const reg = async (req, res) => {
 const login = async (req,res) => {
 
     const {email,password} = req.body
+
+    // console.log("email,password" ,email,password)
 
     if(!email || !password){
         return res.json({
@@ -117,7 +119,7 @@ const login = async (req,res) => {
 
         const isValidPassword = await bcrypt.compare(password, isExist.password)
         
-        console.log("isValidPassword",isValidPassword)
+        // console.log("isValidPassword",isValidPassword)
 
         if(!isValidPassword) {
             return res.json({
@@ -157,7 +159,7 @@ const login = async (req,res) => {
 
         
     } catch (error) {
-        console.log(error)
+        // console.log(error)
 
         return res.json({
             success: false,
@@ -166,4 +168,24 @@ const login = async (req,res) => {
     }
 }
 
-module.exports = {reg,login}
+
+const checkAuth = async(req,res) => {
+
+    try {
+        const user = req.user
+        // console.log("user",user)
+        return res.json({
+            message : "You are authenticated",
+            user,
+            success : true
+        })
+        
+    } catch (error) {
+        return res.json({
+            message : "somthing went wrong",
+            success : false
+        })
+    }
+}
+
+module.exports = {reg,login,checkAuth}
