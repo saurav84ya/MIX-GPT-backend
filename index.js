@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 app.use(
     cors({
-      origin: ["http://localhost:5173", "https://expansetracker9097.netlify.app" ],
+      origin: ["http://localhost:5173", "https://mixgpt.netlify.app/" ],
       credentials: true,
     })
   );
