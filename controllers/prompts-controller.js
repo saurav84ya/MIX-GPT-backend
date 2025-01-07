@@ -48,6 +48,8 @@ const unAuthPrompts = async(req,res) => {
 const authPrompts = async(req,res) => {
     const {email,prompt} = req.body;
 
+    // console.log("email,prompt" ,email,prompt)
+
     if(!email || !prompt){
          return res.json({
             success : false,
@@ -96,14 +98,14 @@ const authPrompts = async(req,res) => {
 const getPrompts = async(req,res) => {
         const {userId} = req.params;
 
-        console.log("userId" ,userId)
+        // console.log("userId" ,userId)
     try {
 
         
         // const prompts = await Prompt.find({user : userId}).populate('user').populate('conversation')
 
         const prompts = await Prompt.find({user : userId}).select("prompt") || []
-        console.log("prompts",prompts)
+        // console.log("prompts",prompts)
 
             if(!prompts){
                 return res.json({
