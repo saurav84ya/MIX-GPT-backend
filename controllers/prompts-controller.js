@@ -135,7 +135,7 @@ const getPromptAns = async(req,res) => {
 
     const { userId, promptId} = req.params
 
-    console.log("userId, promptId" , userId, promptId)
+    // console.log("userId, promptId" , userId, promptId)
 
     if(!userId || !promptId) {
         return res.json({
@@ -163,4 +163,39 @@ const getPromptAns = async(req,res) => {
     }
 }
 
-module.exports = {authPrompts,unAuthPrompts , getPrompts,getPromptAns}
+
+const deletePromptHistory = async(req,res) => {
+
+    const { userId, promptId} = req.params
+
+    // console.log("userId, promptId" , userId, promptId)
+
+    if(!userId || !promptId) {
+        return res.json({
+            success: false,
+            message: "Missing required parameters"
+            })
+    }
+
+    try {
+
+
+          await Prompt.findByIdAndDelete({_id : promptId ,user:userId  })
+        
+
+        
+        return res.json({
+            success: true,
+            message: "prompt deleted succesfully"
+        })
+        
+    } catch (error) {
+        console.log(error)
+        return res.json({
+            success: false,
+            message: "can't delete now"
+        })
+    }
+}
+
+module.exports = {authPrompts,unAuthPrompts ,deletePromptHistory, getPrompts,getPromptAns}
