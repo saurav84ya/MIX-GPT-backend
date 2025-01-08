@@ -188,4 +188,19 @@ const checkAuth = async(req,res) => {
     }
 }
 
-module.exports = {reg,login,checkAuth}
+
+const logoutUser = (req, res) => {
+    console.log("Clearing token cookie");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/", // Make sure this matches the original cookie path
+    });
+    res.json({
+      success: true,
+      message: "Logged out successfully!",
+    });
+  };
+  
+
+module.exports = {reg,login,checkAuth ,logoutUser}

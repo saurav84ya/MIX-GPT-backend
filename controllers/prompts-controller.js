@@ -135,6 +135,8 @@ const getPromptAns = async(req,res) => {
 
     const { userId, promptId} = req.params
 
+    console.log("userId, promptId" , userId, promptId)
+
     if(!userId || !promptId) {
         return res.json({
             success: false,

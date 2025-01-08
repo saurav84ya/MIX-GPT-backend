@@ -1,4 +1,4 @@
-const { reg, login ,checkAuth} = require("../controllers/auth-controller")
+const { reg, login ,checkAuth,logoutUser} = require("../controllers/auth-controller")
 const { checkAuthMid } = require("../middlewares/checkAuth")
 const { sentOtpReg } = require("../middlewares/otpSender")
 
@@ -11,7 +11,12 @@ router.get("/getOtp/:email" , sentOtpReg)
 
 router.post("/reg",reg)
 router.post("/login",login)
+
+
+
 router.get("/checkAuth",checkAuthMid ,checkAuth)
+
+router.post("/logout" , logoutUser)
 
 
 
