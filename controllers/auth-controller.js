@@ -201,6 +201,48 @@ const logoutUser = (req, res) => {
       message: "Logged out successfully!",
     });
   };
+
+
+  const getUserData = async(req,res) => {
+
+    try {
+        const {email} = req.params;
+
+        if(!email) {
+            return res.json({
+                message : "Plz provide an email",
+                success : false
+            })
+        }
+
+        const User = await user.findOne({email}).select('_id name email profileUrl');
+
+        // console.log("user" , User)
+
+        if(!User){
+            return res.json({
+                message : "user not found at this email",
+                success : false,
+            })
+        }
+
+        return res.json({
+            message : "user found",
+            success : true,
+            user : User
+        })
+
+        
+        
+    } catch (error) {
+        // console.log(error)
+
+        return res.json({
+            message : "somthing went wrong",
+            success : false,
+        })
+    }
+  }
   
 
-module.exports = {reg,login,checkAuth ,logoutUser}
+module.exports = {reg,login,checkAuth,getUserData ,logoutUser}

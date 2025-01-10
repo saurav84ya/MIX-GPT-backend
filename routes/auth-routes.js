@@ -1,4 +1,4 @@
-const { reg, login ,checkAuth,logoutUser} = require("../controllers/auth-controller")
+const { reg, login ,checkAuth,logoutUser,getUserData} = require("../controllers/auth-controller")
 const { checkAuthMid } = require("../middlewares/checkAuth")
 const { sentOtpReg } = require("../middlewares/otpSender")
 
@@ -8,6 +8,7 @@ const router = express.Router()
 
 
 router.get("/getOtp/:email" , sentOtpReg)
+router.get("/getUserData/:email" , getUserData)
 
 router.post("/reg",reg)
 router.post("/login",login)
