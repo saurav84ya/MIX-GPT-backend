@@ -207,6 +207,7 @@ const logoutUser = (req, res) => {
 
     try {
         const {email} = req.params;
+        console.log("user" , email)
 
         if(!email) {
             return res.json({
@@ -217,7 +218,7 @@ const logoutUser = (req, res) => {
 
         const User = await user.findOne({email}).select('_id name email profileUrl');
 
-        // console.log("user" , User)
+        console.log("user" , User)
 
         if(!User){
             return res.json({
@@ -243,6 +244,11 @@ const logoutUser = (req, res) => {
         })
     }
   }
+
+
+  const deleteUserAccount = async (req,res) => {
+    
+  }
   
 
-module.exports = {reg,login,checkAuth,getUserData ,logoutUser}
+module.exports = {reg,login,checkAuth,deleteUserAccount,getUserData ,logoutUser}

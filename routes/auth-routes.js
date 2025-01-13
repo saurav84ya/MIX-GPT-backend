@@ -1,4 +1,4 @@
-const { reg, login ,checkAuth,logoutUser,getUserData} = require("../controllers/auth-controller")
+const { reg, login ,checkAuth,logoutUser,getUserData,deleteUserAccount} = require("../controllers/auth-controller")
 const { checkAuthMid } = require("../middlewares/checkAuth")
 const { sentOtpReg } = require("../middlewares/otpSender")
 
@@ -18,6 +18,8 @@ router.post("/login",login)
 router.get("/checkAuth",checkAuthMid ,checkAuth)
 
 router.post("/logout" , logoutUser)
+
+router.delete("/deleteUserAccount/:email" , deleteUserAccount)
 
 
 

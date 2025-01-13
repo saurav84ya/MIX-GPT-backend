@@ -198,4 +198,35 @@ const deletePromptHistory = async(req,res) => {
     }
 }
 
-module.exports = {authPrompts,unAuthPrompts ,deletePromptHistory, getPrompts,getPromptAns}
+const deleteAllPrompt = async (req,res) => {
+    const {userId} = req.params;
+
+    // console.log("userId" ,userId)
+try {
+
+    
+    // const prompts = await Prompt.find({user : userId}).populate('user').populate('conversation')
+
+    await Prompt.deleteMany({user : userId})
+    // console.log("prompts",prompts)
+
+        
+
+    return res.json({
+        success: true,
+        message : "deleted succesfull"
+    });
+
+
+    
+} catch (error) {
+    // console.error("Error fetching prompts:", error);
+    return res.json({
+        success: false,
+        message: "Error occurred while fetching prompts",
+    });
+}
+
+}
+
+module.exports = {authPrompts,unAuthPrompts ,deletePromptHistory, getPrompts,deleteAllPrompt,getPromptAns}
