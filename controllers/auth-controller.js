@@ -1,3 +1,4 @@
+const Prompt = require("../database/schema/prompts");
 const user = require("../database/schema/user");
 const { getOtp, deleteOtp } = require("../middlewares/otpFunctions");
 
@@ -218,7 +219,7 @@ const logoutUser = (req, res) => {
 
         const User = await user.findOne({email}).select('_id name email profileUrl');
 
-        console.log("user" , User)
+        // console.log("user" , User)
 
         if(!User){
             return res.json({
@@ -247,7 +248,35 @@ const logoutUser = (req, res) => {
 
 
   const deleteUserAccount = async (req,res) => {
-    
+    const {userId } = req.params;
+
+    console.log("userId",userId)
+
+    try {
+        if(!userId){
+            return res.json({
+                success : false,
+                // message : "cant delete user Now",
+                message : "Plz Provide UserID"
+            })
+        }
+
+        await user.deleteOne({_id : userId})
+        await Prompt.deleteMany({user : userId })
+
+        res.json({
+            success  : true,
+            message : "Account deleted sucesfully"
+        })
+
+    } catch (error) {
+        console.log("error ",error)
+        res.json({
+            success  : true,
+            message : "Account deleted sucesfully"
+        })
+    }
+
   }
   
 

@@ -19,7 +19,7 @@ router.get("/checkAuth",checkAuthMid ,checkAuth)
 
 router.post("/logout" , logoutUser)
 
-router.delete("/deleteUserAccount/:email" , deleteUserAccount)
+router.delete("/deleteUserAccount/:userId" , deleteUserAccount)
 
 
 
