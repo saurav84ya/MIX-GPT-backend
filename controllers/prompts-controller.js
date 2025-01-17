@@ -38,7 +38,7 @@ const getResponseLlama = async (prompt) => {
             stop: null,
         });
 
-        console.log("Chat Response:", chatCompletion.choices[0].message.content);
+        return chatCompletion.choices[0].message.content;
     } catch (error) {
         console.error("Error:", error);
     }
@@ -70,7 +70,7 @@ const getResponseGemma = async (prompt) => {
           }
       
           // Send the full response back to the client
-          console.log("responseText" , responseText)
+         return responseText
     } catch (error) {
         console.log("error" ,error)
         
@@ -110,59 +110,69 @@ const unAuthPrompts = async(req,res) => {
 
 
 
-const authPrompts = async(req,res) => {
-    const {email,prompt , model } = req.body;
-    console.log("model" ,model)
+const authPrompts = async (req, res) => {
+    const { email, prompt, model } = req.body;
 
-    // console.log("email,prompt" ,email,prompt)
-
-    if(!email || !prompt || !model){
-         return res.json({
-            success : false,
-            message : "Please enter email and prompt"
-        })
+    if (!email || !prompt || !model) {
+        return res.json({
+            success: false,
+            message: "Please enter email, prompt, and model",
+        });
     }
+
     try {
+        const isExist = await user.findOne({ email });
 
-      
-
-        const isExist = await user.findOne({email})
-
-        if(!isExist){
+        if (!isExist) {
             return res.json({
-                success : false,
-                message : "User not found"
-            })
+                success: false,
+                message: "User not found",
+            });
         }
 
-        const response = await getResponse(prompt);
+        let responseText;
+
+        if (model === "gemini") {
+            const response = await getResponse(prompt);
+            responseText = response.response.candidates[0].content.parts[0].text;
+        } else if (model === "gemma2") {
+            responseText = await getResponseGemma(prompt);
+        } else if (model === "llama") {
+            responseText = await getResponseLlama(prompt);
+        } else {
+            return res.json({
+                success: false,
+                message: "Invalid model specified",
+            });
+        }
+
 
         const newPrompt = new Prompt({
-            prompt , 
-            answer : response.response.candidates[0].content.parts[0].text ,
-            user : isExist._id ,
-            model : "Gemini"
-        })
+            prompt,
+            answer: responseText,
+            user: isExist._id,
+            model,
+        });
 
         const savedPrompt = await newPrompt.save();
-        isExist.conversation.push(savedPrompt._id)
-        await isExist.save()
+        isExist.conversation.push(savedPrompt._id);
+        await isExist.save();
 
         return res.json({
-            success : true,
-            message : "Response from Google Generative AI",
-            response : response.response.candidates[0].content.parts[0].text,
-            promptId : savedPrompt._id
-            })
-        
+            success: true,
+            message: `Response from ${model}`,
+            response: responseText,
+            promptId: savedPrompt._id,
+        });
+
     } catch (error) {
-        console.log("error" ,error)
         return res.json({
-            success : false ,
-            message : "Error occurred while processing your request"
-            })
+            success: false,
+            message: "Error occurred while processing your request",
+        });
     }
-} 
+};
+
 
 const getPrompts = async(req,res) => {
         const {userId} = req.params;
