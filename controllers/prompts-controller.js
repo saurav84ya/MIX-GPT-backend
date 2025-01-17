@@ -18,13 +18,15 @@ const getResponse = async (prompt) => {
 };
 
 
-const getResponseLama = async (prompt) => {
+const groq = new Groq({
+    apiKey: process.env.API_KEY_LAMA,
+});
+
+const getResponseLlama = async (prompt) => {
     const messages = [{ role: "user", content: prompt }];
 
     try {
-        const groq = new Groq({
-            apiKey: process.env.API_KEY_LAMA,
-        });
+        
 
         const chatCompletion = await groq.chat.completions.create({
             messages: messages,
@@ -41,6 +43,40 @@ const getResponseLama = async (prompt) => {
         console.error("Error:", error);
     }
 };
+
+
+const getResponseGemma = async (prompt) => {
+
+    try {
+
+        const chatCompletion = await groq.chat.completions.create({
+            messages: [
+              { role: 'user', content: prompt },
+              { role: 'assistant', content: 'Hello! 👋 How can I help you today?' },
+            ],
+            model: 'gemma2-9b-it', // Model name (can be dynamic if required)
+            temperature: 1,
+            max_completion_tokens: 1024,
+            top_p: 1,
+            stream: true, // For streaming responses
+            stop: null,
+          });
+      
+          let responseText = '';
+      
+          // Collect streaming chunks and assemble the final response
+          for await (const chunk of chatCompletion) {
+            responseText += chunk.choices[0]?.delta?.content || '';
+          }
+      
+          // Send the full response back to the client
+          console.log("responseText" , responseText)
+    } catch (error) {
+        console.log("error" ,error)
+        
+    }
+}
+
 
 
 
@@ -75,17 +111,20 @@ const unAuthPrompts = async(req,res) => {
 
 
 const authPrompts = async(req,res) => {
-    const {email,prompt } = req.body;
+    const {email,prompt , model } = req.body;
+    console.log("model" ,model)
 
     // console.log("email,prompt" ,email,prompt)
 
-    if(!email || !prompt){
+    if(!email || !prompt || !model){
          return res.json({
             success : false,
             message : "Please enter email and prompt"
         })
     }
     try {
+
+      
 
         const isExist = await user.findOne({email})
 
@@ -100,8 +139,9 @@ const authPrompts = async(req,res) => {
 
         const newPrompt = new Prompt({
             prompt , 
-            answer : response.response ,
+            answer : response.response.candidates[0].content.parts[0].text ,
             user : isExist._id ,
+            model : "Gemini"
         })
 
         const savedPrompt = await newPrompt.save();
@@ -111,7 +151,7 @@ const authPrompts = async(req,res) => {
         return res.json({
             success : true,
             message : "Response from Google Generative AI",
-            response : response.response,
+            response : response.response.candidates[0].content.parts[0].text,
             promptId : savedPrompt._id
             })
         
@@ -230,14 +270,11 @@ const deletePromptHistory = async(req,res) => {
 const deleteAllPrompt = async (req,res) => {
     const {userId} = req.params;
 
-    // console.log("userId" ,userId)
 try {
 
     
-    // const prompts = await Prompt.find({user : userId}).populate('user').populate('conversation')
 
     await Prompt.deleteMany({user : userId})
-    // console.log("prompts",prompts)
 
         
 
@@ -249,7 +286,6 @@ try {
 
     
 } catch (error) {
-    // console.error("Error fetching prompts:", error);
     return res.json({
         success: false,
         message: "Error occurred while fetching prompts",
