@@ -1,4 +1,5 @@
 const { reg, login ,checkAuth,logoutUser,getUserData,deleteUserAccount} = require("../controllers/auth-controller")
+const { updateUserName,updateEmail } = require("../controllers/userUpdate-controller")
 const { checkAuthMid } = require("../middlewares/checkAuth")
 const { sentOtpReg } = require("../middlewares/otpSender")
 
@@ -20,6 +21,9 @@ router.get("/checkAuth",checkAuthMid ,checkAuth)
 router.post("/logout" , logoutUser)
 
 router.delete("/deleteUserAccount/:userId" , deleteUserAccount)
+
+router.post("/updateUserName",updateUserName)
+router.post("/updateUserEmail",updateEmail)
 
 
 

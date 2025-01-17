@@ -191,7 +191,7 @@ const checkAuth = async(req,res) => {
 
 
 const logoutUser = (req, res) => {
-    console.log("Clearing token cookie");
+    // console.log("Clearing token cookie");
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -250,7 +250,7 @@ const logoutUser = (req, res) => {
   const deleteUserAccount = async (req,res) => {
     const {userId } = req.params;
 
-    console.log("userId",userId)
+    // console.log("userId",userId)
 
     try {
         if(!userId){
@@ -263,6 +263,12 @@ const logoutUser = (req, res) => {
 
         await user.deleteOne({_id : userId})
         await Prompt.deleteMany({user : userId })
+
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            path: "/", // Make sure this matches the original cookie path
+          });
 
         res.json({
             success  : true,
