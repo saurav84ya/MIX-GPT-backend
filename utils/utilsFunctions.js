@@ -6,7 +6,6 @@ const newPass = async (req, res) => {
   const { email, password, otp } = req.body;
 
 
-  // console.log(" email, password, otp " ,  email, password, otp )
 
   try {
     if (!email || !password || !otp) {
