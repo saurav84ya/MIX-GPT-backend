@@ -17,6 +17,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "generative-ai": "^0.1.4",
+    "groq-sdk": "^0.12.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
     "nodemailer": "^6.9.16",

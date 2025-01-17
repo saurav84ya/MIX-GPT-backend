@@ -73,7 +73,7 @@ const updateEmail = async (req, res) => {
             });
         }
 
-        console.log("otpOnServer" , otpOnServer , otp)
+        // console.log("otpOnServer" , otpOnServer , otp)
 
         if (otpOnServer.otp === otp) {
             await user.findByIdAndUpdate(id, { email });

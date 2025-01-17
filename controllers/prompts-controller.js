@@ -2,6 +2,8 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const user = require("../database/schema/user");
 const Prompt = require("../database/schema/prompts")
 
+const Groq = require("groq-sdk");
+
 
 const getResponse = async (prompt) => {
     try {
@@ -14,6 +16,33 @@ const getResponse = async (prompt) => {
         throw new Error("Failed to generate response from AI");
     }
 };
+
+
+const getResponseLama = async (prompt) => {
+    const messages = [{ role: "user", content: prompt }];
+
+    try {
+        const groq = new Groq({
+            apiKey: process.env.API_KEY_LAMA,
+        });
+
+        const chatCompletion = await groq.chat.completions.create({
+            messages: messages,
+            model: "llama-3.3-70b-versatile",
+            temperature: 1,
+            max_completion_tokens: 1024,
+            top_p: 1,
+            stream: false, // Change to true if you want streaming responses
+            stop: null,
+        });
+
+        console.log("Chat Response:", chatCompletion.choices[0].message.content);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+};
+
+
 
 const unAuthPrompts = async(req,res) => {
     const {prompt} = req.body;
@@ -46,7 +75,7 @@ const unAuthPrompts = async(req,res) => {
 
 
 const authPrompts = async(req,res) => {
-    const {email,prompt} = req.body;
+    const {email,prompt } = req.body;
 
     // console.log("email,prompt" ,email,prompt)
 
