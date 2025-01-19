@@ -70,7 +70,7 @@ const reg = async (req, res) => {
             .cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // Enable secure flag in production
-                sameSite: "Strict", // Prevent CSRF attacks
+                sameSite: "None", // Prevent CSRF attacks
             })
             .status(201)
             .json({
@@ -133,7 +133,7 @@ const login = async (req,res) => {
                 email: isExist.email,
             },
             process.env.JWT_SECRET, // Use a secure secret from env
-            { expiresIn: "1h" } // Optional: Set token expiration time
+            { expiresIn: "1000h" } // Optional: Set token expiration time
         );
 
 
