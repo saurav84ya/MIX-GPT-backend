@@ -20,7 +20,6 @@ const getOtp = async (email) => {
 
 const setOtp = async (email, otp) => {
 
-    console.log("email, otp" ,email, otp)
   try {
     const newOtp = new OtpModel({
       email : email,
@@ -28,7 +27,6 @@ const setOtp = async (email, otp) => {
     });
 
     await newOtp.save();
-    console.log("OTP stored successfully");
   } catch (err) {
     console.error("Error storing OTP:", err);
   }

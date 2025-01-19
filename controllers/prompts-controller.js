@@ -72,7 +72,6 @@ const getResponseGemma = async (prompt) => {
           // Send the full response back to the client
          return responseText
     } catch (error) {
-        console.log("error" ,error)
         
     }
 }
@@ -89,7 +88,6 @@ const unAuthPrompts = async(req,res) => {
         })
     }
     try {
-        console.log("prompt",prompt)
 
         const resonse = await getResponse(prompt);
 
@@ -177,14 +175,11 @@ const authPrompts = async (req, res) => {
 const getPrompts = async(req,res) => {
         const {userId} = req.params;
 
-        // console.log("userId" ,userId)
     try {
 
         
-        // const prompts = await Prompt.find({user : userId}).populate('user').populate('conversation')
 
         const prompts = await Prompt.find({user : userId}).select("prompt") || []
-        // console.log("prompts",prompts)
 
             if(!prompts){
                 return res.json({
@@ -201,7 +196,6 @@ const getPrompts = async(req,res) => {
 
         
     } catch (error) {
-        // console.error("Error fetching prompts:", error);
         return res.json({
             success: false,
             message: "Error occurred while fetching prompts",
@@ -214,7 +208,6 @@ const getPromptAns = async(req,res) => {
 
     const { userId, promptId} = req.params
 
-    // console.log("userId, promptId" , userId, promptId)
 
     if(!userId || !promptId) {
         return res.json({
@@ -227,7 +220,6 @@ const getPromptAns = async(req,res) => {
 
         const promptAns = await Prompt.find({user : userId , _id : promptId})
 
-        console.log(promptAns)
 
         return res.json({
             success: true,
@@ -247,7 +239,6 @@ const deletePromptHistory = async(req,res) => {
 
     const { userId, promptId} = req.params
 
-    // console.log("userId, promptId" , userId, promptId)
 
     if(!userId || !promptId) {
         return res.json({
@@ -269,7 +260,6 @@ const deletePromptHistory = async(req,res) => {
         })
         
     } catch (error) {
-        console.log(error)
         return res.json({
             success: false,
             message: "can't delete now"

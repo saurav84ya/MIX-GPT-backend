@@ -34,7 +34,6 @@ const sentOtp = async (req, res) => {
         
 
         const otp = crypto.randomInt(100000, 999999).toString();
-        // console.log("email",email)
         await setOtp(email, otp);
 
         const transporter = nodemailer.createTransport({
@@ -79,7 +78,6 @@ const sentOtp = async (req, res) => {
 
 const sentOtpReg = async (req, res) => {
     const {email}  = req.params;
-    console.log("email" ,email)
     if (!email) {
         return res.json({
             success: false,
@@ -108,7 +106,6 @@ const sentOtpReg = async (req, res) => {
         
 
         const otp = crypto.randomInt(100000, 999999).toString();
-        // console.log("email",email)
         await setOtp(email, otp);
 
         const transporter = nodemailer.createTransport({

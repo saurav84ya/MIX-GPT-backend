@@ -10,7 +10,6 @@ const jwt = require("jsonwebtoken")
 const reg = async (req, res) => {
     const { name, email, password, otp } = req.body;
 
-    // console.log("name, email, password, otp: in reg ", name, email, password, otp);
 
     // Check for missing fields
     if (!name || !email || !password || !otp) {
@@ -98,7 +97,6 @@ const login = async (req,res) => {
 
     const {email,password} = req.body
 
-    // console.log("email,password" ,email,password)
 
     if(!email || !password){
         return res.json({
@@ -120,7 +118,6 @@ const login = async (req,res) => {
 
         const isValidPassword = await bcrypt.compare(password, isExist.password)
         
-        // console.log("isValidPassword",isValidPassword)
 
         if(!isValidPassword) {
             return res.json({
@@ -160,7 +157,6 @@ const login = async (req,res) => {
 
         
     } catch (error) {
-        // console.log(error)
 
         return res.json({
             success: false,
@@ -174,7 +170,6 @@ const checkAuth = async(req,res) => {
 
     try {
         const user = req.user
-        // console.log("user",user)
         return res.json({
             message : "You are authenticated",
             user,
@@ -191,7 +186,6 @@ const checkAuth = async(req,res) => {
 
 
 const logoutUser = (req, res) => {
-    // console.log("Clearing token cookie");
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -208,7 +202,6 @@ const logoutUser = (req, res) => {
 
     try {
         const {email} = req.params;
-        console.log("user" , email)
 
         if(!email) {
             return res.json({
@@ -219,7 +212,6 @@ const logoutUser = (req, res) => {
 
         const User = await user.findOne({email}).select('_id name email profileUrl');
 
-        // console.log("user" , User)
 
         if(!User){
             return res.json({
@@ -237,7 +229,6 @@ const logoutUser = (req, res) => {
         
         
     } catch (error) {
-        // console.log(error)
 
         return res.json({
             message : "somthing went wrong",
@@ -250,7 +241,6 @@ const logoutUser = (req, res) => {
   const deleteUserAccount = async (req,res) => {
     const {userId } = req.params;
 
-    // console.log("userId",userId)
 
     try {
         if(!userId){
@@ -276,7 +266,6 @@ const logoutUser = (req, res) => {
         })
 
     } catch (error) {
-        console.log("error ",error)
         res.json({
             success  : true,
             message : "Account deleted sucesfully"

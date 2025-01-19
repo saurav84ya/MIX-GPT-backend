@@ -11,7 +11,6 @@ const checkAuthMid = async(req,res,next)=>{
       message : "Unauthrosid user!"
     })
 
-    // console.log("token" ,token)
 
 
     try {
@@ -36,7 +35,6 @@ const checkAuthMid = async(req,res,next)=>{
         next()
 
     } catch (error) {
-        console.log(error)
         return res.json({
             success : false ,
             message : "midddleware error"
