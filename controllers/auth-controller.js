@@ -62,7 +62,7 @@ const reg = async (req, res) => {
                 email: newUser.email,
             },
             process.env.JWT_SECRET, // Use a secure secret from env
-            { expiresIn: "1000h" } // Optional: Set token expiration time
+            { expiresIn: "1h" } // Optional: Set token expiration time
         );
 
         // Send the token as an HTTP-only cookie
@@ -70,8 +70,7 @@ const reg = async (req, res) => {
             .cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production", // Enable secure flag in production
-                sameSite: "None", 
-                maxAge : 1000*3600*10 ,// Prevent CSRF attacks
+                sameSite: "Strict", // Prevent CSRF attacks
             })
             .status(201)
             .json({
@@ -134,7 +133,7 @@ const login = async (req,res) => {
                 email: isExist.email,
             },
             process.env.JWT_SECRET, // Use a secure secret from env
-            { expiresIn: "1000h" } // Optional: Set token expiration time
+            { expiresIn: "1100h" } // Optional: Set token expiration time
         );
 
 
@@ -142,8 +141,8 @@ const login = async (req,res) => {
                 .cookie("token", token, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production", // Enable secure flag in production
-                    sameSite: "None",
-                    maxAge : 1000*3600*10 ,  // Prevent CSRF attacks
+                    sameSite: "Strict", // Prevent CSRF attacks
+                    maxAge : 1000*3600*1000
                 })
                 .json({
                     success: true,
