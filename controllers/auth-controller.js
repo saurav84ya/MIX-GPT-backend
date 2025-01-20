@@ -62,7 +62,7 @@ const reg = async (req, res) => {
                 email: newUser.email,
             },
             process.env.JWT_SECRET, // Use a secure secret from env
-            { expiresIn: "1h" } // Optional: Set token expiration time
+            { expiresIn: "10000h" } // Optional: Set token expiration time
         );
 
         // Send the token as an HTTP-only cookie
@@ -142,7 +142,6 @@ const login = async (req,res) => {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production", // Enable secure flag in production
                     sameSite: "Strict", // Prevent CSRF attacks
-                    maxAge : 1000*3600*1000
                 })
                 .json({
                     success: true,
