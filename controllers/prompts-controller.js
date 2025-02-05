@@ -45,6 +45,28 @@ const getResponseLlama = async (prompt) => {
 };
 
 
+const getResponseDeepSeek = async (prompt) => {
+    const messages = [{ role: "user", content: prompt }];
+
+    try {
+        const chatCompletion = await groq.chat.completions.create({
+            messages: messages,
+            model: "deepseek-r1-distill-llama-70b",
+            temperature: 0.6,
+            max_completion_tokens: 4096,
+            top_p: 0.95,
+            stream: false, // Change to true if you want streaming responses
+            stop: null,
+        });
+
+        return chatCompletion.choices[0].message.content;
+    } catch (error) {
+        console.error("Error:", error);
+    }
+};
+
+
+
 const getResponseGemma = async (prompt) => {
 
     try {
@@ -137,7 +159,9 @@ const authPrompts = async (req, res) => {
             responseText = await getResponseGemma(prompt);
         } else if (model === "llama") {
             responseText = await getResponseLlama(prompt);
-        } else {
+        } else if (model === "deepseek") {
+            responseText = await getResponseDeepSeek(prompt)
+        }else {
             return res.json({
                 success: false,
                 message: "Invalid model specified",

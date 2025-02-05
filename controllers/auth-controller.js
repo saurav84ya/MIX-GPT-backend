@@ -170,6 +170,7 @@ const checkAuth = async(req,res) => {
 
     try {
         const user = req.user
+        console.log("user" , user)
         return res.json({
             message : "You are authenticated",
             user,
